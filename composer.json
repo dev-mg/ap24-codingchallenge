@@ -2,6 +2,7 @@
     "name": "mg/ap24-codingchallenge",
     "description":"AP24 coding challenge",
     "require": {
-        "slim/slim": "4.*"
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.3"
     }
 }
