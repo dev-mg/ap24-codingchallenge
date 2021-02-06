@@ -5,12 +5,17 @@ volumes:
         driver: local
 
 services:
-    slim:
+    build:
         image: php:7-alpine
         working_dir: /var/www
+        command: ./composer.phar install --no-plugins --no-scripts
+        volumes:
+            - .:/var/www
+    api:
+        build: .
+        depends_on:
+            - build
         command: php -S 0.0.0.0:8080 -t public
-        environment:
-            docker: "true"
         ports:
             - 80:8080
         volumes:
