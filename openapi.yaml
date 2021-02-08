@@ -1,0 +1,118 @@
+openapi: 3.0.1
+info:
+  title: AP24 Coding Challenge API
+  description: AP24 Coding Challenge API
+  version: 1.0.0
+servers:
+  - url: http://localhost/
+tags:
+  - name: test
+    description: 'Test description'
+paths:
+  /test/{carId}:
+    post:
+      tags:
+        - test
+      summary: Add a new car to the store
+      operationId: addCar
+      parameters:
+        - name: carId
+          in: path
+          description: ID of car
+          required: true
+          schema:
+            type: string
+            minLength: 3
+            maxLength: 10
+      requestBody:
+        description: Car object that needs to be added to the store
+        content:
+          application/json:
+            schema:
+              required:
+                - mileage
+                - preowners
+              type: object
+              properties:
+                mileage:
+                  type: integer
+                  format: int64
+                preowners:
+                  maximum: 3
+                  minimum: 1
+                  type: integer
+                  format: int32
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Car'
+        404:
+          description: Car not found
+          content: { }
+        422:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiValidationError'
+        500:
+          description: Application Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiException'
+components:
+  schemas:
+    Car:
+      required:
+        - id
+        - mileage
+        - preowners
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 3
+          maxLength: 10
+        mileage:
+          type: integer
+          format: int64
+        preowners:
+          maximum: 3
+          minimum: 1
+          type: integer
+          format: int32
+    ApiValidationError:
+      type: object
+      properties:
+        errors:
+          type: object
+          properties:
+            id:
+              type: string
+            mileage:
+              type: string
+            preowners:
+              type: string
+    ApiException:
+      type: object
+      properties:
+        message:
+          type: string
+        exception:
+          type: object
+          properties:
+            type:
+              type: string
+            code:
+              type: integer
+            message:
+              type: string
+            file:
+              type: string
+            line:
+              type: integer
